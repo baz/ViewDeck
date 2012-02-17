@@ -123,6 +123,7 @@
 @synthesize leftLedge = _leftLedge;
 @synthesize rightLedge = _rightLedge;
 @synthesize resizesCenterView = _resizesCenterView;
+@synthesize showsRightViewInCenter = _showsRightViewInCenter;
 @synthesize originalShadowOpacity = _originalShadowOpacity;
 @synthesize originalShadowPath = _originalShadowPath;
 @synthesize originalShadowRadius = _originalShadowRadius;
@@ -149,6 +150,7 @@
         _rotationBehavior = IIViewDeckRotationKeepsLedgeSizes;
         _viewAppeared = NO;
         _resizesCenterView = NO;
+        _showsRightViewInCenter = NO;
         self.panners = [NSMutableArray array];
         self.enabled = YES;
 
@@ -665,11 +667,16 @@
     
     [UIView animateWithDuration:OPEN_SLIDE_DURATION(animated) delay:0 options:options | UIViewAnimationOptionLayoutSubviews animations:^{
         self.rightController.view.hidden = NO;
-        self.slidingControllerView.frame = [self slidingRectForOffset:self.rightLedge - self.referenceBounds.size.width];
+        self.slidingControllerView.frame = [self slidingRectForOffset:self.showsRightViewInCenter ? - self.referenceBounds.size.width : self.rightLedge - self.referenceBounds.size.width];
         [self centerViewHidden];
     } completion:^(BOOL finished) {
         if (completed) completed(self);
         [self performDelegate:@selector(viewDeckControllerDidOpenRightView:animated:) animated:animated];
+
+        if (self.showsRightViewInCenter) {
+            // Ensure the right view has a gesture recognizer so it can swipe to get back the center controller
+            [self addPanner:self.rightController.view];
+        }
     }];
 }
 

@@ -79,6 +79,7 @@ typedef enum {
 @property (nonatomic) CGFloat leftLedge;
 @property (nonatomic) CGFloat rightLedge;
 @property (nonatomic) BOOL resizesCenterView;
+@property (nonatomic) BOOL showsRightViewInCenter;
 @property (nonatomic) IIViewDeckPanningMode panningMode;
 @property (nonatomic) IIViewDeckCenterHiddenInteractivity centerhiddenInteractivity;
 @property (nonatomic) IIViewDeckNavigationControllerBehavior navigationControllerBehavior;
