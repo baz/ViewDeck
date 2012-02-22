@@ -371,6 +371,11 @@
     
     [self addPanners];
 
+    if (self.showsRightViewInCenter) {
+        // Ensure the right view has a gesture recognizer so it can swipe to get back the center controller
+        [self addPanner:self.rightController.view];
+    }
+
     if (self.slidingControllerView.frame.origin.x == 0.0f) 
         [self centerViewVisible];
     else
@@ -401,7 +406,10 @@
     [self removePanners];
     
     [self closeLeftView];
-    [self closeRightView];
+
+    if (!self.showsRightViewInCenter) {
+        [self closeRightView];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
