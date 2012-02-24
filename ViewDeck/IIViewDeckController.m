@@ -339,6 +339,7 @@
     [super viewWillAppear:animated];
     
     [self.view addObserver:self forKeyPath:@"bounds" options:NSKeyValueChangeSetting context:nil];
+    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueChangeSetting context:nil];
 
     BOOL appeared = _viewAppeared;
     if (!_viewAppeared) {
@@ -416,6 +417,7 @@
     [super viewDidDisappear:animated];
 
     [self.view removeObserver:self forKeyPath:@"bounds"];
+    [self.view removeObserver:self forKeyPath:@"frame"];
 
     [self relayAppearanceMethod:^(UIViewController *controller) {
         [controller viewDidDisappear:animated];
@@ -1206,6 +1208,8 @@
             navController.navigationBarHidden = YES;
             navController.navigationBarHidden = NO;
         }
+    } else if ([keyPath isEqualToString:@"frame"]) {
+        self.slidingControllerView.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.referenceBounds].CGPath;
     }
 }
 
