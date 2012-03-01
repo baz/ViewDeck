@@ -1049,13 +1049,14 @@
             if (leftController == self.rightController) self.rightController = nil;
 
             leftController.viewDeckController = self;
+            leftController.view.frame = self.referenceBounds;
+
             if (self.mustRelayAppearance) [_leftController viewWillAppear:NO];
             if (self.slidingController)
                 [self.referenceView insertSubview:leftController.view belowSubview:self.slidingControllerView];
             else
                 [self.referenceView addSubview:leftController.view];
             leftController.view.hidden = self.slidingControllerView.frame.origin.x <= 0;
-            leftController.view.frame = self.referenceBounds;
             leftController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         }
     }
@@ -1151,13 +1152,14 @@
             if (rightController == self.leftController) self.leftController = nil;
             
             rightController.viewDeckController = self;
+            rightController.view.frame = self.referenceBounds;
+
             if (self.mustRelayAppearance) [_rightController viewWillAppear:NO];
             if (self.slidingController) 
                 [self.referenceView insertSubview:rightController.view belowSubview:self.slidingControllerView];
             else
                 [self.referenceView addSubview:rightController.view];
             rightController.view.hidden = self.slidingControllerView.frame.origin.x >= 0;
-            rightController.view.frame = self.referenceBounds;
             rightController.view.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         }
     }
