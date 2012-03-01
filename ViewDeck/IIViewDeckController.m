@@ -71,6 +71,7 @@
 @property (nonatomic, retain) UIButton* centerTapper;
 @property (nonatomic, retain) UIView* centerView;
 @property (nonatomic, readonly) UIView* slidingControllerView;
+@property (nonatomic, assign) BOOL boundsObserverRemoved;
 
 - (void)cleanup;
 
@@ -138,6 +139,7 @@
 @synthesize rotationBehavior = _rotationBehavior;
 @synthesize enabled = _enabled;
 @synthesize elastic = _elastic;
+@synthesize boundsObserverRemoved = _boundsObserverRemoved;
 
 #pragma mark - Initalisation and deallocation
 
@@ -151,6 +153,7 @@
         _viewAppeared = NO;
         _resizesCenterView = NO;
         _showsRightViewInCenter = NO;
+        _boundsObserverRemoved = YES;
         self.panners = [NSMutableArray array];
         self.enabled = YES;
 
@@ -203,6 +206,12 @@
     self.referenceView = nil;
     self.centerView = nil;
     self.centerTapper = nil;
+
+    if (!_boundsObserverRemoved) {
+        [self.view removeObserver:self forKeyPath:@"bounds"];
+        [self.view removeObserver:self forKeyPath:@"frame"];
+        _boundsObserverRemoved = YES;
+    }
 }
 
 - (void)dealloc {
@@ -337,9 +346,12 @@
 
 - (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
-    
-    [self.view addObserver:self forKeyPath:@"bounds" options:NSKeyValueChangeSetting context:nil];
-    [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueChangeSetting context:nil];
+
+    if (_boundsObserverRemoved) {
+        [self.view addObserver:self forKeyPath:@"bounds" options:NSKeyValueChangeSetting context:nil];
+        [self.view addObserver:self forKeyPath:@"frame" options:NSKeyValueChangeSetting context:nil];
+        _boundsObserverRemoved = NO;
+    }
 
     BOOL appeared = _viewAppeared;
     if (!_viewAppeared) {
@@ -417,8 +429,11 @@
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
 
-    [self.view removeObserver:self forKeyPath:@"bounds"];
-    [self.view removeObserver:self forKeyPath:@"frame"];
+    if (!_boundsObserverRemoved) {
+        [self.view removeObserver:self forKeyPath:@"bounds"];
+        [self.view removeObserver:self forKeyPath:@"frame"];
+        _boundsObserverRemoved = YES;
+    }
 
     [self relayAppearanceMethod:^(UIViewController *controller) {
         [controller viewDidDisappear:animated];
