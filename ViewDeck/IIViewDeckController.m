@@ -366,6 +366,7 @@
         
         [self applyShadowToSlidingView];
         _viewAppeared = YES;
+        appeared = YES;
     }
     else 
         [self arrangeViewsAfterRotation];
