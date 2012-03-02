@@ -687,7 +687,7 @@
         self.leftController.view.hidden = YES;
 
         // Restore shadow
-        [self applyShadowToSlidingView];
+        self.slidingControllerView.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, self.referenceBounds.size.width, self.referenceBounds.size.height)] CGPath];
 
         if (self.showsRightViewInCenter) {
             // Ensure the right view has a gesture recognizer so it can swipe to get back the center controller
