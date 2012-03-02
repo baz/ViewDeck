@@ -260,7 +260,7 @@
 
 - (CGSize)slidingSizeForOffset:(CGFloat)offset {
     if (!self.resizesCenterView || offset == 0.0f) return self.referenceBounds.size;
-    
+
     if (offset < 0) 
         return (CGSize) { self.referenceBounds.size.width + offset, self.referenceBounds.size.height };
 
@@ -847,7 +847,16 @@
     else {
         x = lx;
     }
+
     self.slidingControllerView.frame = [self slidingRectForOffset:x];
+
+    if (self.delegate && [self.delegate respondsToSelector:@selector(viewDeckController:slidingSizeOffsetForOriginalOffset:)]) {
+        CGFloat offset = [self.delegate viewDeckController:self slidingSizeOffsetForOriginalOffset:x];
+        CGSize slidingSize = [self slidingSizeForOffset:offset];
+        CGRect adjustedFrame = self.slidingControllerView.frame;
+        adjustedFrame.size = slidingSize;
+        self.slidingControllerView.frame = adjustedFrame;
+    }
 
     BOOL rightWasHidden = self.rightController.view.hidden;
     BOOL leftWasHidden = self.leftController.view.hidden;

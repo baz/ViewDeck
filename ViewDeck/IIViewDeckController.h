@@ -142,6 +142,7 @@ typedef enum {
 - (BOOL)viewDeckControllerWillCloseRightView:(IIViewDeckController*)viewDeckController animated:(BOOL)animated;
 - (void)viewDeckControllerDidCloseRightView:(IIViewDeckController*)viewDeckController animated:(BOOL)animated;
 - (void)viewDeckControllerDidShowCenterView:(IIViewDeckController*)viewDeckController animated:(BOOL)animated;
+- (CGFloat)viewDeckController:(IIViewDeckController *)viewDeckController slidingSizeOffsetForOriginalOffset:(CGFloat)originalOffset;
 
 @end
 
