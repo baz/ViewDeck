@@ -656,6 +656,46 @@
     [self toggleRightViewAnimated:YES];
 }
 
+- (void)closeCenterViewAndOpenRightView {
+    BOOL animated = YES;
+    UIViewAnimationOptions options = UIViewAnimationOptionCurveEaseInOut;
+    if (!self.rightControllerIsClosed) return;
+    if (!self.leftController || II_FLOAT_EQUAL(CGRectGetMinX(self.slidingControllerView.frame), self.leftLedge)) return;
+
+    // check the delegate to allow closing
+    if (![self checkDelegate:@selector(viewDeckControllerWillCloseLeftView:animated:) animated:animated]) return;
+
+    // check the delegate to allow opening
+    if (![self checkDelegate:@selector(viewDeckControllerWillOpenRightView:animated:) animated:animated]) return;
+
+    self.rightController.view.hidden = NO;
+    self.rightController.view.alpha = 0.0;
+    [UIView animateWithDuration:CLOSE_SLIDE_DURATION(animated) * 1.3 delay:0 options:options | UIViewAnimationOptionLayoutSubviews animations:^{
+        self.rightController.view.alpha = 1.0;
+        CGRect frame = self.slidingControllerView.frame;
+        CGRect slidingFrame = [self slidingRectForOffset:self.showsRightViewInCenter ? - self.referenceBounds.size.width : self.rightLedge - self.referenceBounds.size.width];
+        slidingFrame.size = frame.size;
+        self.slidingControllerView.frame = slidingFrame;
+
+        // Adjust shadow for this new size
+        self.slidingControllerView.layer.shadowPath = [[UIBezierPath bezierPathWithRect:CGRectMake(0, 0, slidingFrame.size.width, slidingFrame.size.height)] CGPath];
+
+        [self centerViewHidden];
+    } completion:^(BOOL finished) {
+        [self performDelegate:@selector(viewDeckControllerDidCloseLeftView:animated:) animated:animated];
+        [self performDelegate:@selector(viewDeckControllerDidOpenRightView:animated:) animated:animated];
+        self.leftController.view.hidden = YES;
+
+        // Restore shadow
+        [self applyShadowToSlidingView];
+
+        if (self.showsRightViewInCenter) {
+            // Ensure the right view has a gesture recognizer so it can swipe to get back the center controller
+            [self addPanner:self.rightController.view];
+        }
+    }];
+}
+
 - (void)openRightView {
     [self openRightViewAnimated:YES];
 }
