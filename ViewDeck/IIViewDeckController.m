@@ -1055,7 +1055,11 @@
 #pragma mark - Properties
 
 - (BOOL)mustRelayAppearance {
-    return ![self respondsToSelector:@selector(automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers)] || ![self performSelector:@selector(automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers)];
+	BOOL relay = NO;
+	if ([self respondsToSelector:@selector(automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers)]) {
+		relay = [self performSelector:@selector(automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers)];
+	}
+	return relay;
 }
 
 - (void)setTitle:(NSString *)title {
