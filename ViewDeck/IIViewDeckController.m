@@ -1115,7 +1115,7 @@
             leftController.viewDeckController = self;
             leftController.view.frame = self.referenceBounds;
 
-            if (self.mustRelayAppearance) [_leftController viewWillAppear:NO];
+            if (self.mustRelayAppearance) [leftController viewWillAppear:NO];
             if (self.slidingController)
                 [self.referenceView insertSubview:leftController.view belowSubview:self.slidingControllerView];
             else
@@ -1218,7 +1218,7 @@
             rightController.viewDeckController = self;
             rightController.view.frame = self.referenceBounds;
 
-            if (self.mustRelayAppearance) [_rightController viewWillAppear:NO];
+            if (self.mustRelayAppearance) [rightController viewWillAppear:NO];
             if (self.slidingController) 
                 [self.referenceView insertSubview:rightController.view belowSubview:self.slidingControllerView];
             else
