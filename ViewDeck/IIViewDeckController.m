@@ -1056,8 +1056,9 @@
 
 - (BOOL)mustRelayAppearance {
 	BOOL relay = NO;
-	if ([self respondsToSelector:@selector(automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers)]) {
-		relay = [self performSelector:@selector(automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers)];
+	SEL selector = @selector(automaticallyForwardAppearanceAndRotationMethodsToChildViewControllers);
+	if ([self respondsToSelector:selector]) {
+		relay = (BOOL)((uintptr_t)[self performSelector:selector]);
 	}
 	return relay;
 }
